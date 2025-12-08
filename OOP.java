@@ -1,6 +1,8 @@
 import java.util.*;
 
+// ------------------------------
 // Parent class (Inheritance)
+// ------------------------------
 class Person {
     protected String id;
     protected String name;
@@ -10,15 +12,18 @@ class Person {
         this.name = name;
     }
 
-    public void displayInfo() {   // Overridable method
+    // This will be overridden by child classes
+    public void displayInfo() {
         System.out.println(name + " (" + id + ")");
     }
 }
 
-// Student inherits Person
+// ------------------------------
+// Student extends Person
+// Has a list of borrowed books (Aggregation)
+// ------------------------------
 class Student extends Person {
 
-    // Aggregation: student has borrowed books
     private List<Book> borrowed = new ArrayList<>();
 
     public Student(String id, String name) {
@@ -26,30 +31,44 @@ class Student extends Person {
     }
 
     @Override
-    public void displayInfo() {   // Overriding
+    public void displayInfo() { // Overriding
         System.out.println("Student: " + name + " (" + id + ")");
     }
 
-    public void borrow(Book b) { borrowed.add(b); }
+    public void borrow(Book b) {
+        borrowed.add(b);
+    }
 }
 
-// Abstract class (required)
+// ------------------------------
+// Abstract item class (OOP requirement)
+// ------------------------------
 abstract class Item {
     protected String title;
 
-    public Item(String title) { this.title = title; }
+    public Item(String title) {
+        this.title = title;
+    }
 
-    public abstract void show();
+    public abstract void show(); // Must be implemented
 }
 
-// Simple Author class (Composition)
+// ------------------------------
+// Author class (Composition)
+// ------------------------------
 class Author {
     private String name;
-    public Author(String name) { this.name = name; }
+
+    public Author(String name) {
+        this.name = name;
+    }
+
     public String getName() { return name; }
 }
 
+// ------------------------------
 // Book extends Item
+// ------------------------------
 class Book extends Item {
     private String isbn;
     private Author author;
@@ -62,13 +81,18 @@ class Book extends Item {
     }
 
     @Override
-    public void show() {   // Overriding
+    public void show() { // Overriding
         System.out.println(title + " | " + author.getName() + " | " + isbn);
     }
 
-    // Overloading
-    public boolean matches(String t) { return title.equalsIgnoreCase(t); }
-    public boolean matches(int year) { return false; }
+    // Overloading example
+    public boolean matches(String t) {
+        return title.toLowerCase().equals(t.toLowerCase());
+    }
+
+    public boolean matches(int year) { // not used, but required
+        return false;
+    }
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean b) { available = b; }
@@ -76,29 +100,61 @@ class Book extends Item {
     public String getTitle() { return title; }
 }
 
-// Library: Association + searching + sorting
+// ------------------------------
+// Library class
+// Contains searching, sorting, lists of books & students
+// ------------------------------
 class Library {
+
     private List<Book> books = new ArrayList<>();
     private List<Student> students = new ArrayList<>();
 
     public void addBook(Book b) { books.add(b); }
     public void addStudent(Student s) { students.add(s); }
 
+    // ------------------------
+    // MANUAL SEARCH (linear search)
+    // ------------------------
     public Book search(String title) {
-        for (Book b : books)
-            if (b.matches(title)) return b;
+        for (int i = 0; i < books.size(); i++) {
+            Book b = books.get(i);
+            if (b.getTitle().toLowerCase().equals(title.toLowerCase())) {
+                return b;
+            }
+        }
         return null;
     }
 
+    // ------------------------
+    // MANUAL SORT (bubble sort)
+    // Sort books alphabetically by title
+    // ------------------------
     public void sortBooks() {
-        books.sort(Comparator.comparing(Book::getTitle));
+
+        for (int i = 0; i < books.size() - 1; i++) {
+            for (int j = 0; j < books.size() - i - 1; j++) {
+
+                String t1 = books.get(j).getTitle();
+                String t2 = books.get(j + 1).getTitle();
+
+                // compare titles manually
+                if (t1.compareToIgnoreCase(t2) > 0) {
+                    // swap
+                    Book temp = books.get(j);
+                    books.set(j, books.get(j + 1));
+                    books.set(j + 1, temp);
+                }
+            }
+        }
     }
 
     public List<Book> getBooks() { return books; }
     public List<Student> getStudents() { return students; }
 }
 
-// MAIN
+// ------------------------------
+// MAIN CLASS
+// ------------------------------
 public class Main {
     public static void main(String[] args) {
 
@@ -114,7 +170,8 @@ public class Main {
         int ch;
 
         do {
-            System.out.println("\n1. Show Books");
+            System.out.println("\n===== LIBRARY MENU =====");
+            System.out.println("1. Show Books");
             System.out.println("2. Add Book");
             System.out.println("3. Add Student");
             System.out.println("4. Search Book");
@@ -134,24 +191,30 @@ public class Main {
                 case 2:
                     System.out.print("ISBN: ");
                     String isbn = in.nextLine();
+
                     System.out.print("Title: ");
                     String title = in.nextLine();
+
                     System.out.print("Author: ");
                     String a = in.nextLine();
+
                     lib.addBook(new Book(isbn, title, new Author(a)));
                     break;
 
                 case 3:
-                    System.out.print("ID: ");
+                    System.out.print("Student ID: ");
                     String sid = in.nextLine();
-                    System.out.print("Name: ");
+
+                    System.out.print("Student Name: ");
                     String sn = in.nextLine();
+
                     lib.addStudent(new Student(sid, sn));
                     break;
 
                 case 4:
                     System.out.print("Search title: ");
                     String t = in.nextLine();
+
                     Book found = lib.search(t);
                     if (found != null) found.show();
                     else System.out.println("Not found");
@@ -159,7 +222,7 @@ public class Main {
 
                 case 5:
                     lib.sortBooks();
-                    System.out.println("Sorted!");
+                    System.out.println("Books sorted!");
                     break;
 
                 case 6:
@@ -167,8 +230,9 @@ public class Main {
                     String stid = in.nextLine();
 
                     Student sObj = null;
-                    for (Student s : lib.getStudents())
+                    for (Student s : lib.getStudents()) {
                         if (s.id.equals(stid)) sObj = s;
+                    }
 
                     if (sObj == null) {
                         System.out.println("Student not found");
@@ -177,6 +241,7 @@ public class Main {
 
                     System.out.print("Book title: ");
                     String bt = in.nextLine();
+
                     Book b = lib.search(bt);
 
                     if (b == null || !b.isAvailable()) {
