@@ -158,107 +158,35 @@ class Library {
 public class Main {
     public static void main(String[] args) {
 
-        Scanner in = new Scanner(System.in);
         Library lib = new Library();
 
-        // Sample data
+        // Sample data (Demo)
         lib.addBook(new Book("111", "Harry Potter", new Author("J.K. Rowling")));
         lib.addBook(new Book("222", "1984", new Author("George Orwell")));
+
         lib.addStudent(new Student("S1", "Bille"));
         lib.addStudent(new Student("S2", "Ali"));
 
-        int ch;
+        // Show all books
+        System.out.println("Books in library:");
+        for (Book b : lib.getBooks()) {
+            b.show();
+        }
 
-        do {
-            System.out.println("\n===== LIBRARY MENU =====");
-            System.out.println("1. Show Books");
-            System.out.println("2. Add Book");
-            System.out.println("3. Add Student");
-            System.out.println("4. Search Book");
-            System.out.println("5. Sort Books");
-            System.out.println("6. Borrow Book");
-            System.out.println("0. Exit");
-            System.out.print("Choose: ");
+        // Search example
+        System.out.println("\nSearching for 1984:");
+        Book found = lib.search("1984");
+        if (found != null) {
+            found.show();
+        }
 
-            ch = in.nextInt(); in.nextLine();
-
-            switch (ch) {
-
-                case 1:
-                    for (Book b : lib.getBooks()) b.show();
-                    break;
-
-                case 2:
-                    System.out.print("ISBN: ");
-                    String isbn = in.nextLine();
-
-                    System.out.print("Title: ");
-                    String title = in.nextLine();
-
-                    System.out.print("Author: ");
-                    String a = in.nextLine();
-
-                    lib.addBook(new Book(isbn, title, new Author(a)));
-                    break;
-
-                case 3:
-                    System.out.print("Student ID: ");
-                    String sid = in.nextLine();
-
-                    System.out.print("Student Name: ");
-                    String sn = in.nextLine();
-
-                    lib.addStudent(new Student(sid, sn));
-                    break;
-
-                case 4:
-                    System.out.print("Search title: ");
-                    String t = in.nextLine();
-
-                    Book found = lib.search(t);
-                    if (found != null) found.show();
-                    else System.out.println("Not found");
-                    break;
-
-                case 5:
-                    lib.sortBooks();
-                    System.out.println("Books sorted!");
-                    break;
-
-                case 6:
-                    System.out.print("Student ID: ");
-                    String stid = in.nextLine();
-
-                    Student sObj = null;
-                    for (Student s : lib.getStudents()) {
-                        if (s.id.equals(stid)) sObj = s;
-                    }
-
-                    if (sObj == null) {
-                        System.out.println("Student not found");
-                        break;
-                    }
-
-                    System.out.print("Book title: ");
-                    String bt = in.nextLine();
-
-                    Book b = lib.search(bt);
-
-                    if (b == null || !b.isAvailable()) {
-                        System.out.println("Book not available");
-                        break;
-                    }
-
-                    b.setAvailable(false);
-                    sObj.borrow(b);
-                    System.out.println("Borrowed!");
-                    break;
-
-                case 0:
-                    System.out.println("Goodbye!");
-            }
-
-        } while (ch != 0);
+        // Sort example
+        lib.sortBooks();
+        System.out.println("\nAfter sorting:");
+        for (Book b : lib.getBooks()) {
+            b.show();
+        }
     }
 }
+
 
