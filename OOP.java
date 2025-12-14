@@ -50,7 +50,7 @@ abstract class Item {
         this.title = title;
     }
 
-    public abstract void show(); // Must be implemented
+    public abstract void show(); 
 }
 
 // ------------------------------
@@ -70,19 +70,19 @@ class Author {
 // Book extends Item
 // ------------------------------
 class Book extends Item {
-    private String isbn;
+    private String bookNumber;
     private Author author;
     private boolean available = true;
 
-    public Book(String isbn, String title, Author author) {
+    public Book(String bookNumber, String title, Author author) {
         super(title);
-        this.isbn = isbn;
+        this.bookNumber = bookNumber;
         this.author = author;
     }
 
     @Override
     public void show() { // Overriding
-        System.out.println(title + " | " + author.getName() + " | " + isbn);
+        System.out.println(title + " | " + author.getName() + " | " + bookNumber);
     }
 
     // Overloading example
@@ -261,3 +261,4 @@ public class Main {
         } while (ch != 0);
     }
 }
+
