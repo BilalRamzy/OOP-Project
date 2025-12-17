@@ -288,8 +288,8 @@ public class Main {
                             break;
 
                         case 4:
-                            System.out.print("ISBN: ");
-                            String isbn = in.nextLine();
+                            System.out.print("bookNumber: ");
+                            String bookNumber = in.nextLine();
 
                             System.out.print("Title: ");
                             String bt = in.nextLine().toLowerCase();
@@ -297,7 +297,7 @@ public class Main {
                             System.out.print("Author: ");
                             String author = in.nextLine().toLowerCase();
 
-                            lib.addBook(new Book(isbn, bt, new Author(author)));
+                            lib.addBook(new Book(bookNumber, bt, new Author(author)));
                             System.out.println("Book added!");
                             break;
 
@@ -323,5 +323,6 @@ public class Main {
         System.out.println("Goodbye!");
     }
 }
+
 
 
