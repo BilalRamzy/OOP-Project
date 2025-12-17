@@ -222,8 +222,13 @@ public class Main {
 
                         case 3:
                             lib.sortBooks();
-                            System.out.println("Books sorted!");
+                            System.out.println("Books after sorting:");
+
+                            for (Book b : lib.getBooks()) {
+                                b.show();
+                            }   
                             break;
+
                     }
 
                 } while (gChoice != 0);
@@ -292,4 +297,5 @@ public class Main {
         System.out.println("Goodbye!");
     }
 }
+
 
