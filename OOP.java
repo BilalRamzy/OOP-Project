@@ -163,7 +163,7 @@ public class Main {
         Scanner in = new Scanner(System.in);
         Library lib = new Library();
 
-        // -------- Add 10 default books --------
+        // -------- Default Books --------
         lib.addBook(new Book("101", "harry potter", new Author("j.k. rowling")));
         lib.addBook(new Book("102", "1984", new Author("george orwell")));
         lib.addBook(new Book("103", "clean code", new Author("robert martin")));
@@ -185,7 +185,7 @@ public class Main {
             System.out.print("Choose: ");
 
             role = in.nextInt();
-            in.nextLine(); // clear buffer
+            in.nextLine();
 
             // ================= GUEST =================
             if (role == 1) {
@@ -223,12 +223,10 @@ public class Main {
                         case 3:
                             lib.sortBooks();
                             System.out.println("Books after sorting:");
-
                             for (Book b : lib.getBooks()) {
                                 b.show();
-                            }   
+                            }
                             break;
-
                     }
 
                 } while (gChoice != 0);
@@ -245,14 +243,17 @@ public class Main {
 
                 if (!username.equals("admin") || !password.equals("admin")) {
                     System.out.println("Wrong username or password!");
-                    continue; // يرجع لاختيار Guest / Admin
+                    continue;
                 }
 
                 int aChoice;
                 do {
                     System.out.println("\n--- Admin Menu ---");
-                    System.out.println("1. Add book");
-                    System.out.println("2. Delete book by title");
+                    System.out.println("1. Show all books");
+                    System.out.println("2. Search book by title");
+                    System.out.println("3. Sort books by title");
+                    System.out.println("4. Add book");
+                    System.out.println("5. Delete book by title");
                     System.out.println("0. Back");
                     System.out.print("Choose: ");
 
@@ -262,24 +263,49 @@ public class Main {
                     switch (aChoice) {
 
                         case 1:
-                            System.out.print("bookNumber: ");
-                            String bookNumber = in.nextLine();
+                            for (Book b : lib.getBooks()) {
+                                b.show();
+                            }
+                            break;
+
+                        case 2:
+                            System.out.print("Enter book title: ");
+                            String t = in.nextLine().toLowerCase();
+
+                            Book f = lib.search(t);
+                            if (f != null)
+                                f.show();
+                            else
+                                System.out.println("Book not found");
+                            break;
+
+                        case 3:
+                            lib.sortBooks();
+                            System.out.println("Books after sorting:");
+                            for (Book b : lib.getBooks()) {
+                                b.show();
+                            }
+                            break;
+
+                        case 4:
+                            System.out.print("ISBN: ");
+                            String isbn = in.nextLine();
 
                             System.out.print("Title: ");
-                            String title = in.nextLine().toLowerCase();
+                            String bt = in.nextLine().toLowerCase();
 
                             System.out.print("Author: ");
                             String author = in.nextLine().toLowerCase();
 
-                            lib.addBook(new Book(bookNumber, title, new Author(author)));
+                            lib.addBook(new Book(isbn, bt, new Author(author)));
                             System.out.println("Book added!");
                             break;
 
-                        case 2:
+                        case 5:
                             System.out.print("Enter title to delete: ");
-                            String t = in.nextLine().toLowerCase();
+                            String del = in.nextLine().toLowerCase();
 
-                            Book b = lib.search(t);
+                            Book b = lib.search(del);
                             if (b != null) {
                                 lib.getBooks().remove(b);
                                 System.out.println("Book deleted!");
