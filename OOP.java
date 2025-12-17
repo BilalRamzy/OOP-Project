@@ -155,38 +155,140 @@ class Library {
 // ------------------------------
 // MAIN CLASS
 // ------------------------------
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
 
+        Scanner in = new Scanner(System.in);
         Library lib = new Library();
 
-        // Sample data (Demo)
-        lib.addBook(new Book("111", "Harry Potter", new Author("J.K. Rowling")));
-        lib.addBook(new Book("222", "1984", new Author("George Orwell")));
+        // -------- Add 10 default books --------
+        lib.addBook(new Book("101", "harry potter", new Author("j.k. rowling")));
+        lib.addBook(new Book("102", "1984", new Author("george orwell")));
+        lib.addBook(new Book("103", "clean code", new Author("robert martin")));
+        lib.addBook(new Book("104", "the hobbit", new Author("j.r.r tolkien")));
+        lib.addBook(new Book("105", "java basics", new Author("james gosling")));
+        lib.addBook(new Book("106", "algorithms", new Author("clrs")));
+        lib.addBook(new Book("107", "data structures", new Author("mark allen")));
+        lib.addBook(new Book("108", "design patterns", new Author("gof")));
+        lib.addBook(new Book("109", "oop concepts", new Author("booch")));
+        lib.addBook(new Book("110", "operating systems", new Author("silberschatz")));
 
-        lib.addStudent(new Student("S1", "Bille"));
-        lib.addStudent(new Student("S2", "Ali"));
+        int role;
 
-        // Show all books
-        System.out.println("Books in library:");
-        for (Book b : lib.getBooks()) {
-            b.show();
-        }
+        do {
+            System.out.println("\n===== LOGIN =====");
+            System.out.println("1. Guest");
+            System.out.println("2. Admin");
+            System.out.println("0. Exit");
+            System.out.print("Choose: ");
 
-        // Search example
-        System.out.println("\nSearching for 1984:");
-        Book found = lib.search("1984");
-        if (found != null) {
-            found.show();
-        }
+            role = in.nextInt();
+            in.nextLine(); // clear buffer
 
-        // Sort example
-        lib.sortBooks();
-        System.out.println("\nAfter sorting:");
-        for (Book b : lib.getBooks()) {
-            b.show();
-        }
+            // ================= GUEST =================
+            if (role == 1) {
+                int gChoice;
+                do {
+                    System.out.println("\n--- Guest Menu ---");
+                    System.out.println("1. Show all books");
+                    System.out.println("2. Search book by title");
+                    System.out.println("3. Sort books by title");
+                    System.out.println("0. Back");
+                    System.out.print("Choose: ");
+
+                    gChoice = in.nextInt();
+                    in.nextLine();
+
+                    switch (gChoice) {
+
+                        case 1:
+                            for (Book b : lib.getBooks()) {
+                                b.show();
+                            }
+                            break;
+
+                        case 2:
+                            System.out.print("Enter book title: ");
+                            String title = in.nextLine().toLowerCase();
+
+                            Book found = lib.search(title);
+                            if (found != null)
+                                found.show();
+                            else
+                                System.out.println("Book not found");
+                            break;
+
+                        case 3:
+                            lib.sortBooks();
+                            System.out.println("Books sorted!");
+                            break;
+                    }
+
+                } while (gChoice != 0);
+            }
+
+            // ================= ADMIN =================
+            else if (role == 2) {
+
+                System.out.print("Username: ");
+                String username = in.nextLine().toLowerCase();
+
+                System.out.print("Password: ");
+                String password = in.nextLine().toLowerCase();
+
+                if (!username.equals("admin") || !password.equals("admin")) {
+                    System.out.println("Wrong username or password!");
+                    continue; // يرجع لاختيار Guest / Admin
+                }
+
+                int aChoice;
+                do {
+                    System.out.println("\n--- Admin Menu ---");
+                    System.out.println("1. Add book");
+                    System.out.println("2. Delete book by title");
+                    System.out.println("0. Back");
+                    System.out.print("Choose: ");
+
+                    aChoice = in.nextInt();
+                    in.nextLine();
+
+                    switch (aChoice) {
+
+                        case 1:
+                            System.out.print("bookNumber: ");
+                            String bookNumber = in.nextLine();
+
+                            System.out.print("Title: ");
+                            String title = in.nextLine().toLowerCase();
+
+                            System.out.print("Author: ");
+                            String author = in.nextLine().toLowerCase();
+
+                            lib.addBook(new Book(bookNumber, title, new Author(author)));
+                            System.out.println("Book added!");
+                            break;
+
+                        case 2:
+                            System.out.print("Enter title to delete: ");
+                            String t = in.nextLine().toLowerCase();
+
+                            Book b = lib.search(t);
+                            if (b != null) {
+                                lib.getBooks().remove(b);
+                                System.out.println("Book deleted!");
+                            } else {
+                                System.out.println("Book not found");
+                            }
+                            break;
+                    }
+
+                } while (aChoice != 0);
+            }
+
+        } while (role != 0);
+
+        System.out.println("Goodbye!");
     }
 }
-
-
